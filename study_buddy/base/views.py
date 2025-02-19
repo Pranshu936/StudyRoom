@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
 from .models import Room, Topic, Message, User
-from .forms import RoomForm, UserForm, MyUserCreationForm
+from .forms import RoomForm, UserForm, MyUserCreationForm 
 
 def loginPage(request):
     page = 'login'
@@ -74,9 +74,10 @@ def home(request):
     return render(request, 'base/home.html', context)
 
 
+@login_required(login_url='login')
 def room(request, pk):
     room = Room.objects.get(id=pk)
-    room_messages = room.message_set.all()
+    room_messages = room.message_set.all().order_by('-created')
     participants = room.participants.all()
 
     if request.method == 'POST':
@@ -88,8 +89,7 @@ def room(request, pk):
         room.participants.add(request.user)
         return redirect('room', pk=room.id)
 
-    context = {'room': room, 'room_messages': room_messages,
-               'participants': participants}
+    context = {'room': room, 'room_messages': room_messages, 'participants': participants}
     return render(request, 'base/room.html', context)
 
 

@@ -1,17 +1,20 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap");
 
 :root {
-  --color-main: #71c6dd;
-  --color-main-light: #e1f6fb;
-  --color-dark: #3f4156;
-  --color-dark-medium: #51546e;
-  --color-dark-light: #696d97;
-  --color-light: #e5e5e5;
-  --color-gray: #8b8b8b;
-  --color-light-gray: #b2bdbd;
-  --color-bg: #2d2d39;
-  --color-success: #5dd693;
-  --color-error: #fc4b0b;
+  --color-main: #8b5cf6;
+  --color-main-light: #c4b5fd;
+  --color-dark: #0f172a;
+  --color-dark-medium: #1e293b;
+  --color-dark-light: #334155;
+  --color-light: #f8fafc;
+  --color-gray: #94a3b8;
+  --color-light-gray: #cbd5e1;
+  --color-bg: #020617;
+  --color-success: #10b981;
+  --color-error: #ef4444;
+  --color-gradient-1: #8b5cf6;
+  --color-gradient-2: #6366f1;
+  --color-accent: #22d3ee;
 }
 
 /*========== base styles ==========*/
@@ -23,8 +26,43 @@
   padding: 0;
   box-sizing: border-box;
   text-rendering: optimizeLegibility;
-  /* color: inherit; */
   font-size: inherit;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px var(--color-main), 0 0 10px var(--color-main), 0 0 15px var(--color-main);
+  }
+  50% {
+    box-shadow: 0 0 10px var(--color-main), 0 0 20px var(--color-main), 0 0 30px var(--color-main);
+  }
+  100% {
+    box-shadow: 0 0 5px var(--color-main), 0 0 10px var(--color-main), 0 0 15px var(--color-main);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 html {
@@ -50,6 +88,7 @@ body {
   color: var(--color-light-gray);
   background-color: var(--color-bg);
   min-height: 100vh;
+  background: linear-gradient(45deg, var(--color-bg), #090b28);
 }
 
 img {
@@ -60,6 +99,25 @@ a {
   display: inline-block;
   color: var(--color-main);
   text-decoration: none;
+  position: relative;
+}
+
+a::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background: linear-gradient(90deg, var(--color-gradient-1), var(--color-gradient-2));
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 /*========== components ==========*/
@@ -76,73 +134,90 @@ a {
   align-items: center;
   gap: 1rem;
   cursor: pointer;
-  transition: all ease-in-out 0.3s;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   padding: 1rem 2rem;
-  border-radius: 5px;
-  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
   font-weight: 500;
 }
 
-.btn--link {
-  border-radius: 0;
-  padding: 0;
-  color: var(--color-main);
-  box-shadow: none;
+.btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, var(--color-gradient-1), var(--color-gradient-2));
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.btn--link:hover {
-  text-decoration: underline;
-}
-
-.btn--main {
-  background-color: var(--color-main);
-  color: var(--color-dark);
+.btn:hover::before {
+  opacity: 0.1;
 }
 
 .btn:hover {
-  opacity: 0.9;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn:active {
+  transform: translateY(-1px);
+}
+
+.btn--main {
+  background: linear-gradient(45deg, var(--color-gradient-1), var(--color-gradient-2));
+  color: var(--color-light);
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 
 .btn--dark {
   background-color: var(--color-dark-light);
   color: var(--color-light);
-}
-
-.btn > svg {
-  fill: currentColor;
-  width: 1.6rem;
-  height: 1.6rem;
+  border: 1px solid var(--color-dark-medium);
 }
 
 .btn--pill {
-  border-radius: 10rem;
+  border-radius: 50px;
   font-size: 1.4rem;
   font-weight: 700;
   padding: 6px 2.5rem;
   color: var(--color-main);
-  background: transparent;
+  background: rgba(139, 92, 246, 0.1);
   border: 2px solid var(--color-main);
+  transition: all 0.3s ease;
 }
 
-.action-button {
-  background: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
+.btn--pill:hover {
+  background: var(--color-main);
+  color: var(--color-light);
 }
 
 .avatar {
   position: relative;
   display: inline-block;
   border-radius: 50%;
-  border: 2px solid var(--color-main);
+  border: 2px solid transparent;
+  background: linear-gradient(45deg, var(--color-gradient-1), var(--color-gradient-2)) border-box;
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  box-shadow: 0 0 0 2px var(--color-bg), 0 0 0 4px var(--color-main); 
+  overflow: hidden;
 }
+
+
 
 .avatar img {
   display: block;
   border-radius: 50%;
   object-fit: cover;
   object-position: center;
+}
+
+.avatar.active {
+  animation: glow 2s infinite;
 }
 
 .avatar::after {
@@ -157,6 +232,7 @@ a {
 
 .avatar.active::after {
   background-color: var(--color-success);
+  animation: pulse 2s infinite;
 }
 
 .avatar.avatar--small img {
@@ -200,12 +276,12 @@ a {
 
 .scroll::-webkit-scrollbar {
   width: 0.6rem;
-  background-color: rgb(41, 41, 46);
+  background-color: var(--color-dark);
 }
 
 .scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, var(--color-gradient-1), var(--color-gradient-2));
   border-radius: 1rem;
-  background-color: var(--color-gray);
 }
 
 .dropdown-menu {
@@ -213,9 +289,11 @@ a {
   position: absolute;
   top: 5rem;
   right: 0.5rem;
-  background: var(--color-dark-light);
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
   border-radius: 5px;
-  box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   display: none;
 }
@@ -230,10 +308,11 @@ a {
   color: var(--color-light) !important;
   font-weight: 500;
   font-size: 1.4rem;
+  transition: all 0.3s ease;
 }
 
 .dropdown-menu a:hover {
-  background-color: var(--color-dark-medium);
+  background: rgba(139, 92, 246, 0.1);
 }
 
 .dropdown-menu > a:not(:last-child) {
@@ -267,7 +346,9 @@ a {
 
 .header {
   padding: 1.5rem;
-  background-color: var(--color-dark);
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
 }
 
 .header > .container {
@@ -283,23 +364,36 @@ a {
 }
 
 .header__logo > img {
-  height: 3.2rem;
-  width: 3.2rem;
+  height: 4rem;
+  width: 6rem;
 }
 
-.header__logo > h1 {
+.header__logo h1 {
   font-weight: 700;
   font-size: 2rem;
   color: var(--color-light);
+  background: linear-gradient(90deg, var(--color-main), var(--color-accent));
+  background-clip: text; /* Added */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
+
 .header__search > label {
-  background-color: var(--color-dark-medium);
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
   padding: 1.3rem 1rem;
   display: flex;
   align-items: center;
   gap: 1rem;
   border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.header__search label:focus-within {
+  border-color: var(--color-main);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
 }
 
 .header__search svg {
@@ -315,6 +409,10 @@ a {
   border: none;
   outline: none;
   color: var(--color-light);
+}
+
+.header__search input::placeholder {
+  color: var(--color-gray);
 }
 
 @media screen and (max-width: 800px) {
@@ -340,8 +438,8 @@ a {
 }
 
 .header__menu {
-  margin-left: auto;
-  position: relative;
+  position: absolute;
+  right: 0;
 }
 
 .header__menu a {
@@ -419,6 +517,7 @@ a {
 .layout--2 > .container > div:last-child {
   flex-basis: 25%;
 }
+
 /*========== Layout Box ==========*/
 
 .layout__box {
@@ -429,9 +528,10 @@ a {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -46%);
-  background-color: var(--color-dark);
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
   border-radius: 1rem;
-  box-shadow: 1px 1px 6px 3px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 }
 
@@ -497,19 +597,23 @@ a {
 .form__group input,
 .form__group textarea,
 .form__group select {
-  background: transparent;
-  border: 1px solid var(--color-dark-light);
+  background: rgba(30, 41, 59, 0.3);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
   padding: 1rem;
   border-radius: 3px;
   width: 100%;
   color: var(--color-light);
   font-weight: 500;
   outline: none;
+  transition: all 0.3s ease;
 }
 
 .form__group input:focus,
-.form__group textarea:focus {
+.form__group textarea:focus,
+.form__group select:focus {
   border-color: var(--color-main);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
 }
 
 .form__group textarea {
@@ -576,21 +680,33 @@ a {
   margin-bottom: 3rem;
   font-weight: 500;
   color: var(--color-light-gray);
-  transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: rgba(30, 41, 59, 0.3);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
 }
 
-.topics__list li a.active,
 .topics__list li a:hover {
-  color: var(--color-main);
+  background: rgba(139, 92, 246, 0.1);
+  transform: translateX(10px);
+  border-color: var(--color-main);
 }
 
 .topics__list li a span {
   padding: 0.5rem 1rem;
-  background-color: var(--color-dark);
+  background: linear-gradient(45deg, var(--color-gradient-1), var(--color-gradient-2));
   border-radius: 3px;
   font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.topics__list li a:hover span {
+  background: var(--color-main);
+  color: var(--color-light);
 }
 
 .topics-page a:hover {
@@ -604,7 +720,7 @@ a {
   border-bottom: 1px solid var(--color-dark-medium);
 }
 
-.topics-page .header__search{
+.topics-page .header__search {
   display: block;
 }
 
@@ -642,9 +758,18 @@ a {
 
 .roomListRoom {
   margin-bottom: 2.4rem;
-  background-color: var(--color-dark);
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
   border-radius: 1rem;
   padding: 2rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.roomListRoom:hover {
+  transform: translateY(-5px) scale(1.02);
+  border-color: var(--color-main);
+  box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
 }
 
 .roomListRoom__header {
@@ -674,7 +799,6 @@ a {
 
 .roomListRoom__actions svg {
   fill: var(--color-main);
-
   width: 1.6rem;
   height: 1.6rem;
 }
@@ -687,13 +811,12 @@ a {
   font-size: 2rem;
   font-weight: 500;
   margin-bottom: 1.5rem;
-  color: var(--color-light);
-  transition: all 0.3s ease-in-out;
+  background: linear-gradient(90deg, var(--color-main), var(--color-accent));
+  background-clip: text; /* Added */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.roomListRoom__content a:hover {
-  color: var(--color-main);
-}
 
 .roomListRoom__meta {
   border-top: 1px solid var(--color-dark-medium);
@@ -720,7 +843,7 @@ a {
 
 .roomListRoom__topic {
   padding: 5px 1.5rem;
-  background-color: var(--color-dark-medium);
+  background: linear-gradient(45deg, var(--color-gradient-1), var(--color-gradient-2));
   border-radius: 5rem;
   font-weight: 500;
   font-size: 1.3rem;
@@ -731,7 +854,9 @@ a {
 ================================*/
 
 .activities {
-  background: var(--color-dark);
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
   border-radius: 5px;
   overflow: hidden;
 }
@@ -749,8 +874,16 @@ a {
 .activities__box {
   margin: 1.5rem;
   padding: 1.5rem;
-  border: 2px solid var(--color-dark-medium);
+  border: 1px solid rgba(139, 92, 246, 0.1);
+  background: rgba(30, 41, 59, 0.3);
   border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.activities__box:hover {
+  border-color: var(--color-main);
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(139, 92, 246, 0.2);
 }
 
 .activities__boxHeader p {
@@ -823,6 +956,7 @@ a {
   font-weight: 500;
   font-size: 1.8rem;
 }
+
 .auth .layout__boxHeader {
   text-align: center;
   justify-content: center;
@@ -900,7 +1034,9 @@ a {
 
 .room,
 .participants {
-  background: var(--color-dark);
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
   max-height: 87.5vh;
   border-radius: 0.7rem;
   overflow: hidden;
@@ -1109,7 +1245,9 @@ a {
 
 .room__message > form > input {
   resize: none;
-  background-color: var(--color-dark-light);
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(139, 92, 246, 0.1);
   color: var(--color-light);
   border: none;
   outline: none;
@@ -1121,6 +1259,12 @@ a {
   font-size: 1.4rem;
   font-weight: 500;
   position: relative;
+  transition: all 0.3s ease;
+}
+
+.room__message > form > input:focus {
+  border-color: var(--color-main);
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
 }
 
 .room__message > form > input::placeholder {
@@ -1163,3 +1307,195 @@ a {
   color: var(--color-main);
   font-weight: 1.4rem;
 }
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.roomListRoom,
+.activities__box,
+.topics__list li {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.header__logo {
+  animation: slideIn 0.5s ease forwards;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.loading {
+  background: linear-gradient(90deg, rgba(30, 41, 59, 0.3) 0%, rgba(139, 92, 246, 0.1) 50%, rgba(30, 41, 59, 0.3) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+.interactive {
+  transition: all 0.3s ease;
+}
+
+.interactive:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+}
+
+.gradient-text {
+  background: linear-gradient(90deg, var(--color-gradient-1), var(--color-gradient-2));
+  background-clip: text; /* Added */
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+.glow-effect {
+  position: relative;
+}
+
+.glow-effect::after {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, var(--color-gradient-1), var(--color-gradient-2));
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.glow-effect:hover::after {
+  opacity: 0.5;
+}
+
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+
+
+/* Add to your CSS */
+/* Add to your CSS */
+.animated-search {
+  position: relative;
+  margin-left: auto; /* Align to right */
+}
+
+.search-container {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-input {
+  position: absolute;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0 40px 0 15px;
+  border: 2px solid var(--color-main);
+  border-radius: 25px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: all 0.3s ease;
+}
+
+.search-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  color: var(--color-main);
+  cursor: pointer;
+  z-index: 2;
+  transition: color 0.3s ease;
+}
+
+/* Expanded state */
+.search-container.active {
+  width: 250px;
+}
+
+.search-container.active .search-input {
+  opacity: 1;
+  transform: scaleX(1);
+  padding-right: 45px;
+}
+
+.search-container.active .search-icon {
+  color: var(--color-accent);
+}
+
+/* Focus states */
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 8px rgba(var(--color-main-rgb), 0.3);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
