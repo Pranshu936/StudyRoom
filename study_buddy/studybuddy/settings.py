@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-qt_7!ox2or%df$+_#cq9wt=ct(%vzfae2g^b3qz^3vyl+jjtl$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.railway.app', 'localhost']
 
 
 # Application definition
@@ -137,5 +137,6 @@ MEDIA_ROOT = BASE_DIR / 'static/images'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 CORS_ALLOW_ALL_ORIGINS = True
